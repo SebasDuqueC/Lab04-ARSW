@@ -133,9 +133,18 @@ Aquí ajustamos la API para que respete las convenciones y sea fácil de consumi
 - También añadimos un handler de validación para que los errores de `@Valid` respondan con `400` y un mensaje legible.
 
 ### 4. OpenAPI / Swagger
-- Configura `springdoc-openapi` en el proyecto.  
-- Expón documentación automática en `/swagger-ui.html`.  
-- Anota endpoints con `@Operation` y `@ApiResponse`.
+Aquí dejamos la API documentada para que cualquiera pueda probarla sin leer código:
+
+- Ya tenemos `springdoc-openapi` en las dependencias, así que solo fue exponer el UI en `/swagger-ui.html` y el JSON en `/v3/api-docs` (lo puedes abrir en el navegador).
+- Anotamos cada endpoint con `@Operation` y `@ApiResponse` para que la descripción y los códigos de respuesta queden claros en Swagger. Ejemplo en el GET por autor/nombre:
+  ```java
+  @Operation(summary = "Obtiene un plano por autor y nombre")
+  @ApiResponse(responseCode = "200", description = "Plano encontrado")
+  @ApiResponse(responseCode = "404", description = "Plano no existe")
+  @GetMapping("/{author}/{bpname}")
+  public ResponseEntity<ApiResponse<Blueprint>> byAuthorAndName(...) { ... }
+  ```
+- Con eso, al levantar la app puedes ir a `http://localhost:8080/swagger-ui.html`, probar los GET/POST/PUT con ejemplos y ver los esquemas generados automáticamente.
 
 ### 5. Filtros de *Blueprints*
 - Implementa filtros:

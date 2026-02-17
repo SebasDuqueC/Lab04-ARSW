@@ -7,6 +7,10 @@ import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.services.BlueprintsServices;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -25,12 +29,19 @@ public class BlueprintsAPIController {
     public BlueprintsAPIController(BlueprintsServices services) { this.services = services; }
 
     // GET /blueprints
+    @Operation(summary = "Lista todos los planos")
+    @ApiResponse(responseCode = "200", description = "Listado completo",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
     @GetMapping
     public ResponseEntity<ApiResponse<Set<Blueprint>>> getAll() {
         return ok(services.getAllBlueprints());
     }
 
     // GET /blueprints/{author}
+    @Operation(summary = "Lista planos por autor")
+    @ApiResponse(responseCode = "200", description = "Planos del autor",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @ApiResponse(responseCode = "404", description = "No hay planos para ese autor")
     @GetMapping("/{author}")
     public ResponseEntity<ApiResponse<Set<Blueprint>>> byAuthor(@PathVariable String author) {
         try {
@@ -41,6 +52,10 @@ public class BlueprintsAPIController {
     }
 
     // GET /blueprints/{author}/{bpname}
+    @Operation(summary = "Obtiene un plano por autor y nombre")
+    @ApiResponse(responseCode = "200", description = "Plano encontrado",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Plano no existe")
     @GetMapping("/{author}/{bpname}")
     public ResponseEntity<ApiResponse<Blueprint>> byAuthorAndName(@PathVariable String author, @PathVariable String bpname) {
         try {
@@ -51,6 +66,10 @@ public class BlueprintsAPIController {
     }
 
     // POST /blueprints
+    @Operation(summary = "Crea un plano nuevo")
+    @ApiResponse(responseCode = "201", description = "Plano creado")
+    @ApiResponse(responseCode = "400", description = "Datos inválidos o duplicados",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
     @PostMapping
     public ResponseEntity<ApiResponse<Blueprint>> add(@Valid @RequestBody NewBlueprintRequest req) {
         try {
@@ -63,6 +82,10 @@ public class BlueprintsAPIController {
     }
 
     // PUT /blueprints/{author}/{bpname}/points
+    @Operation(summary = "Añade un punto a un plano existente")
+    @ApiResponse(responseCode = "202", description = "Punto agregado",
+            content = @Content(schema = @Schema(implementation = ApiResponse.class)))
+    @ApiResponse(responseCode = "404", description = "Plano no encontrado")
     @PutMapping("/{author}/{bpname}/points")
     public ResponseEntity<ApiResponse<Blueprint>> addPoint(@PathVariable String author, @PathVariable String bpname,
                                       @RequestBody Point p) {
