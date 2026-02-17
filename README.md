@@ -14,11 +14,11 @@ mvn spring-boot:run
 ```
 Probar con `curl`:
 ```bash
-curl -s http://localhost:8080/blueprints | jq
-curl -s http://localhost:8080/blueprints/john | jq
-curl -s http://localhost:8080/blueprints/john/house | jq
-curl -i -X POST http://localhost:8080/blueprints -H 'Content-Type: application/json' -d '{ "author":"john","name":"kitchen","points":[{"x":1,"y":1},{"x":2,"y":2}] }'
-curl -i -X PUT  http://localhost:8080/blueprints/john/kitchen/points -H 'Content-Type: application/json' -d '{ "x":3,"y":3 }'
+curl -s http://localhost:8080/api/v1/blueprints | jq
+curl -s http://localhost:8080/api/v1/blueprints/john | jq
+curl -s http://localhost:8080/api/v1/blueprints/john/house | jq
+curl -i -X POST http://localhost:8080/api/v1/blueprints -H 'Content-Type: application/json' -d '{ "author":"john","name":"kitchen","points":[{"x":1,"y":1},{"x":2,"y":2}] }'
+curl -i -X PUT  http://localhost:8080/api/v1/blueprints/john/kitchen/points -H 'Content-Type: application/json' -d '{ "x":3,"y":3 }'
 ```
 
 > Si deseas activar filtros de puntos (reducción de redundancia, *undersampling*, etc.), implementa nuevas clases que implementen `BlueprintsFilter` y cámbialas por `IdentityFilter` con `@Primary` o usando configuración de Spring.
@@ -114,25 +114,23 @@ En esta parte nos pasamos de la lista en memoria a una base en Postgres para que
 Con esto logramos que las pruebas de los endpoints sigan igual, pero ahora los datos viven en Postgres y sobreviven reinicios.
 
 ### 3. Buenas prácticas de API REST
-- Cambia el path base de los controladores a `/api/v1/blueprints`.  
-- Usa **códigos HTTP** correctos:  
-  - `200 OK` (consultas exitosas).  
-  - `201 Created` (creación).  
-  - `202 Accepted` (actualizaciones).  
-  - `400 Bad Request` (datos inválidos).  
-  - `404 Not Found` (recurso inexistente).  
-- Implementa una clase genérica de respuesta uniforme:
+Aquí ajustamos la API para que respete las convenciones y sea fácil de consumir:
+
+- Movimos el path base a `/api/v1/blueprints` para versionar desde el inicio y no romper clientes a futuro. Así se ven los `curl` ahora (ya están arriba actualizados).
+- Unificamos las respuestas con un `record` sencillo para que siempre venga el mismo sobre: código, mensaje y datos. Lo dejamos en `controllers/ApiResponse.java`:
   ```java
-  public record ApiResponse<T>(int code, String message, T data) {}
+  public record ApiResponse<T>(int code, String message, T data) { }
   ```
-  Ejemplo JSON:
+  Un ejemplo real que devuelve el GET por autor y nombre:
   ```json
   {
     "code": 200,
-    "message": "execute ok",
-    "data": { "author": "john", "name": "house", "points": [...] }
+    "message": "ok",
+    "data": { "author": "john", "name": "house", "points": [{"x":0,"y":0},{"x":10,"y":0}, ...] }
   }
   ```
+- Alineamos los códigos HTTP: `200` para lecturas, `201` cuando se crea un blueprint, `202` si agregamos un punto, `400` cuando los datos vienen mal (validaciones o duplicados) y `404` si no existe el recurso. El controlador ahora los setea explícitamente y envía el mismo formato de respuesta en todos los casos.
+- También añadimos un handler de validación para que los errores de `@Valid` respondan con `400` y un mensaje legible.
 
 ### 4. OpenAPI / Swagger
 - Configura `springdoc-openapi` en el proyecto.  
