@@ -55,9 +55,63 @@ src/main/java/edu/eci/arsw/blueprints
 - Analiza la capa `services` (`BlueprintsServices`) y el controlador `BlueprintsAPIController`.
 
 ### 2. Migración a persistencia en PostgreSQL
-- Configura una base de datos PostgreSQL (puedes usar Docker).  
-- Implementa un nuevo repositorio `PostgresBlueprintPersistence` que reemplace la versión en memoria.  
-- Mantén el contrato de la interfaz `BlueprintPersistence`.  
+En esta parte nos pasamos de la lista en memoria a una base en Postgres para que los planos queden guardados de verdad. Lo hicimos paso a paso entre los dos:
+
+- Primero levantamos un Postgres local con Docker para no enredarnos instalando nada en la máquina. El comando que usamos fue:
+  ```bash
+  docker run --name blueprints-db -e POSTGRES_DB=blueprints -e POSTGRES_USER=blueprints -e POSTGRES_PASSWORD=blueprints -p 5432:5432 -d postgres:16
+  ```
+- Creamos el esquema y datos de ejemplo automáticamente al iniciar la app con los archivos `schema.sql` y `data.sql` en `src/main/resources`. Así evitamos tener que correr scripts manualmente.
+- Creamos el esquema y datos de ejemplo automáticamente al iniciar la app con los archivos `schema.sql` y `data.sql` en `src/main/resources`. Así evitamos tener que correr scripts manualmente. Los fragmentos clave:
+  ```sql
+  -- schema.sql
+  CREATE TABLE IF NOT EXISTS blueprints (
+      author VARCHAR(100) NOT NULL,
+      name   VARCHAR(100) NOT NULL,
+      PRIMARY KEY (author, name)
+  );
+  CREATE TABLE IF NOT EXISTS blueprint_points (
+      author VARCHAR(100) NOT NULL,
+      name   VARCHAR(100) NOT NULL,
+      idx    INT NOT NULL,
+      x      INT NOT NULL,
+      y      INT NOT NULL,
+      PRIMARY KEY (author, name, idx),
+      FOREIGN KEY (author, name) REFERENCES blueprints(author, name) ON DELETE CASCADE
+  );
+  ```
+  ```sql
+  -- data.sql
+  INSERT INTO blueprints(author, name) VALUES ('john','house'), ('john','garage'), ('jane','garden') ON CONFLICT DO NOTHING;
+  INSERT INTO blueprint_points(author, name, idx, x, y) VALUES
+    ('john','house',0,0,0), ('john','house',1,10,0), ('john','house',2,10,10), ('john','house',3,0,10),
+    ('john','garage',0,5,5), ('john','garage',1,15,5), ('john','garage',2,15,15),
+    ('jane','garden',0,2,2), ('jane','garden',1,3,4), ('jane','garden',2,6,7)
+  ON CONFLICT DO NOTHING;
+  ```
+- Agregamos las dependencias de JDBC y el driver de Postgres en el `pom.xml` para que Spring pueda conectarse a la base.
+- Escribimos un repositorio nuevo llamado `PostgresBlueprintPersistence` que implementa la misma interfaz `BlueprintPersistence`, pero ahora usa consultas SQL sencillas con `JdbcTemplate`. Lee y guarda los puntos manteniendo el orden y lanza las mismas excepciones que la versión en memoria. Ejemplo del guardado con batch:
+  ```java
+  public void saveBlueprint(Blueprint bp) throws BlueprintPersistenceException {
+      jdbc.update("INSERT INTO blueprints(author, name) VALUES (?, ?)", bp.getAuthor(), bp.getName());
+      if (!bp.getPoints().isEmpty()) {
+          List<Object[]> batch = new ArrayList<>();
+          for (int i = 0; i < bp.getPoints().size(); i++) {
+              Point p = bp.getPoints().get(i);
+              batch.add(new Object[]{bp.getAuthor(), bp.getName(), i, p.x(), p.y()});
+          }
+          jdbc.batchUpdate("INSERT INTO blueprint_points(author, name, idx, x, y) VALUES (?,?,?,?,?)", batch);
+      }
+  }
+  ```
+- Dejamos el repositorio en memoria activado por defecto y el de Postgres se activa solo con el perfil `postgres`. Así la app sigue corriendo sin base si alguien solo quiere probar rápido.
+- Para correrlo con Postgres activamos el perfil y levantamos la app:
+  ```bash
+  export SPRING_PROFILES_ACTIVE=postgres
+  mvn spring-boot:run
+  ```
+
+Con esto logramos que las pruebas de los endpoints sigan igual, pero ahora los datos viven en Postgres y sobreviven reinicios.
 
 ### 3. Buenas prácticas de API REST
 - Cambia el path base de los controladores a `/api/v1/blueprints`.  
