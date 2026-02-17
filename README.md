@@ -135,7 +135,7 @@ Aquí ajustamos la API para que respete las convenciones y sea fácil de consumi
 ### 4. OpenAPI / Swagger
 Aquí dejamos la API documentada para que cualquiera pueda probarla sin leer código:
 
-- Ya tenemos `springdoc-openapi` en las dependencias, así que solo fue exponer el UI en `/swagger-ui.html` y el JSON en `/v3/api-docs` (lo puedes abrir en el navegador).
+- Ya tenemos `springdoc-openapi` en las dependencias, así que solo fue exponer el UI en `/swagger-ui.html` y el JSON en `/v3/api-docs`,lo puedes abrir en el navegador.
 - Anotamos cada endpoint con `@Operation` y `@ApiResponse` para que la descripción y los códigos de respuesta queden claros en Swagger. Ejemplo en el GET por autor/nombre:
   ```java
   @Operation(summary = "Obtiene un plano por autor y nombre")
@@ -147,10 +147,46 @@ Aquí dejamos la API documentada para que cualquiera pueda probarla sin leer có
 - Con eso, al levantar la app puedes ir a `http://localhost:8080/swagger-ui.html`, probar los GET/POST/PUT con ejemplos y ver los esquemas generados automáticamente.
 
 ### 5. Filtros de *Blueprints*
-- Implementa filtros:
-  - **RedundancyFilter**: elimina puntos duplicados consecutivos.  
-  - **UndersamplingFilter**: conserva 1 de cada 2 puntos.  
-- Activa los filtros mediante perfiles de Spring (`redundancy`, `undersampling`).  
+Para no entregar planos con puntos “ruidosos”, dejamos dos filtros listos y los activamos por perfil para elegir uno a la vez:
+
+- **RedundancyFilter** (perfil `redundancy`): limpia puntos consecutivos duplicados.
+  ```java
+  @Profile("redundancy")
+  public class RedundancyFilter implements BlueprintsFilter {
+      public Blueprint apply(Blueprint bp) {
+          List<Point> in = bp.getPoints();
+          List<Point> out = new ArrayList<>();
+          Point prev = null;
+          for (Point p : in) {
+              if (prev == null || !(prev.x()==p.x() && prev.y()==p.y())) out.add(p);
+              prev = p;
+          }
+          return new Blueprint(bp.getAuthor(), bp.getName(), out);
+      }
+  }
+  ```
+- **UndersamplingFilter** (perfil `undersampling`): se queda con uno de cada dos puntos para bajar densidad.
+  ```java
+  @Profile("undersampling")
+  public class UndersamplingFilter implements BlueprintsFilter {
+      public Blueprint apply(Blueprint bp) {
+          List<Point> in = bp.getPoints();
+          if (in.size() <= 2) return bp;
+          List<Point> out = new ArrayList<>();
+          for (int i = 0; i < in.size(); i++) if (i % 2 == 0) out.add(in.get(i));
+          return new Blueprint(bp.getAuthor(), bp.getName(), out);
+      }
+  }
+  ```
+- Por defecto usamos `IdentityFilter` (sin perfil) que deja todo igual. Lo deshabilitamos automáticamente cuando activas `redundancy` o `undersampling` para evitar choques de beans.
+- Para correr con un filtro basta activar el perfil antes de levantar la app. Ejemplos:
+  ```bash
+  # Limpiar duplicados consecutivos
+  SPRING_PROFILES_ACTIVE=redundancy mvn spring-boot:run
+
+  # Submuestrear (puedes combinar con postgres)
+  SPRING_PROFILES_ACTIVE=postgres,undersampling mvn spring-boot:run
+  ```
 
 ---
 
