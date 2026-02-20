@@ -262,11 +262,10 @@ docker push youruser/lab04-blueprints:latest
 Cómo generar (PowerShell):
 
 ```powershell
-Invoke-RestMethod http://localhost:8080/actuator/metrics | ConvertTo-Json -Depth 10 > docs/metrics/metrics_list.json
-Invoke-RestMethod http://localhost:8080/actuator/prometheus -OutFile docs/metrics/prometheus.txt
-Invoke-RestMethod http://localhost:8080/actuator/health | ConvertTo-Json -Depth 10 > docs/metrics/health.json
+curl -v http://localhost:8080/actuator/health
+curl -v http://localhost:8080/actuator/metrics
+curl -v http://localhost:8080/actuator/prometheus 
 ```
 
-Usa `Invoke-RestMethod` para evitar la advertencia de `Invoke-WebRequest` al capturar contenido.
 
 ---
