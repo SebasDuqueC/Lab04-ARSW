@@ -1,0 +1,16 @@
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\BlueprintsApplication.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\config\OpenApiConfig.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\controllers\ApiResponseDto.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\controllers\BlueprintsAPIController.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\filters\BlueprintsFilter.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\filters\IdentityFilter.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\filters\RedundancyFilter.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\filters\UndersamplingFilter.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\model\Blueprint.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\model\Point.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\persistence\BlueprintNotFoundException.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\persistence\BlueprintPersistence.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\persistence\BlueprintPersistenceException.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\persistence\InMemoryBlueprintPersistence.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\persistence\PostgresBlueprintPersistence.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\services\BlueprintsServices.java
