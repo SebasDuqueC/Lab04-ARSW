@@ -146,6 +146,9 @@ Aquí dejamos la API documentada para que cualquiera pueda probarla sin leer có
   ```
 - Con eso, al levantar la app puedes ir a `http://localhost:8080/swagger-ui.html`, probar los GET/POST/PUT con ejemplos y ver los esquemas generados automáticamente.
 
+![Swagger](ruta/a/la/imagen.png "Imagen Swagger")
+
+
 ### 5. Filtros de *Blueprints*
 Para no entregar planos con puntos “ruidosos”, dejamos dos filtros listos y los activamos por perfil para elegir uno a la vez:
 
