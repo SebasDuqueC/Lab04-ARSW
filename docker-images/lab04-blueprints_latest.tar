@@ -1,0 +1,14 @@
+This is a placeholder file for the container image tarball.
+
+Replace this file with the real Docker image tar produced by:
+
+    docker save lab04-blueprints:latest -o docker-images/lab04-blueprints_latest.tar
+
+Or, instead of adding a tarball to the repo, push the image to a registry:
+
+    mvn spring-boot:build-image -Dspring-boot.build-image.imageName=youruser/lab04-blueprints:latest
+    docker push youruser/lab04-blueprints:latest
+
+Then update the README to reference the registry image name.
+
+(Reason: real image tarballs are often large; this placeholder documents how to produce and replace it.)

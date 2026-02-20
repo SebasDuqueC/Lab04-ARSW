@@ -221,4 +221,31 @@ Para no entregar planos con puntos “ruidosos”, dejamos dos filtros listos y 
 **Bonus**:  
 
 - Imagen de contenedor (`spring-boot:build-image`).  
+
+
+**Imagen de contenedor**
+
+- **Archivo (placeholder en el repo):** [docker-images/lab04-blueprints_latest.tar](docker-images/lab04-blueprints_latest.tar)
+- **Qué se entregó:** un marcador de posición (archivo de texto) que indica cómo generar o reemplazar la imagen real.
+- **Cómo reemplazarlo por la imagen real (opción A — guardar tar):**
+
+```powershell
+# generar imagen localmente con Spring Boot buildpacks
+mvn spring-boot:build-image -Dspring-boot.build-image.imageName=lab04-blueprints:latest
+
+# guardar la imagen en un tar dentro de docker-images/
+docker save lab04-blueprints:latest -o docker-images/lab04-blueprints_latest.tar
+```
+
+- **Opción B — subir a un registry (recomendado):**
+
+```powershell
+# build y push a Docker Hub (ejemplo)
+mvn spring-boot:build-image -Dspring-boot.build-image.imageName=youruser/lab04-blueprints:latest
+docker push youruser/lab04-blueprints:latest
+```
+
 - Métricas con Actuator.  
+
+
+---
