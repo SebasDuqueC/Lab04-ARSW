@@ -237,7 +237,7 @@ mvn spring-boot:build-image -Dspring-boot.build-image.imageName=lab04-blueprints
 docker save lab04-blueprints:latest -o docker-images/lab04-blueprints_latest.tar
 ```
 
-- **Opción B — subir a un registry (recomendado):**
+- **Opción B — subir a un registry:**
 
 ```powershell
 # build y push a Docker Hub (ejemplo)
@@ -247,5 +247,26 @@ docker push youruser/lab04-blueprints:latest
 
 - Métricas con Actuator.  
 
+## 📈 Métricas (Actuator)
+
+- Endpoints expuestos:
+  - `/actuator/metrics` — listado de métricas disponibles
+  - `/actuator/prometheus` — formato Prometheus
+  - `/actuator/health` — estado de la app
+
+- Snapshots incluidos en el repo (evidencia):
+  - `docs/metrics/metrics_list.json`
+  - `docs/metrics/prometheus.txt`
+  - `docs/metrics/health.json`
+
+Cómo generar (PowerShell):
+
+```powershell
+Invoke-RestMethod http://localhost:8080/actuator/metrics | ConvertTo-Json -Depth 10 > docs/metrics/metrics_list.json
+Invoke-RestMethod http://localhost:8080/actuator/prometheus -OutFile docs/metrics/prometheus.txt
+Invoke-RestMethod http://localhost:8080/actuator/health | ConvertTo-Json -Depth 10 > docs/metrics/health.json
+```
+
+Usa `Invoke-RestMethod` para evitar la advertencia de `Invoke-WebRequest` al capturar contenido.
 
 ---
