@@ -193,32 +193,8 @@ Para no entregar planos con puntos “ruidosos”, dejamos dos filtros listos y 
 
 ---
 
-## ✅ Entregables
 
-1. Repositorio en GitHub con:  
-   - Código fuente actualizado.  
-   - Configuración PostgreSQL (`application.yml` o script SQL).  
-   - Swagger/OpenAPI habilitado.  
-   - Clase `ApiResponse<T>` implementada.  
-
-2. Documentación:  
-   - Informe de laboratorio con instrucciones claras.  
-   - Evidencia de consultas en Swagger UI y evidencia de mensajes en la base de datos.  
-   - Breve explicación de buenas prácticas aplicadas.  
-
----
-
-## 📊 Criterios de evaluación
-
-| Criterio | Peso |
-|----------|------|
-| Diseño de API (versionamiento, DTOs, ApiResponse) | 25% |
-| Migración a PostgreSQL (repositorio y persistencia correcta) | 25% |
-| Uso correcto de códigos HTTP y control de errores | 20% |
-| Documentación con OpenAPI/Swagger + README | 15% |
-| Pruebas básicas (unitarias o de integración) | 15% |
-
-**Bonus**:  
+**Bonos**:  
 
 - Imagen de contenedor (`spring-boot:build-image`).  
 
@@ -247,7 +223,7 @@ docker push youruser/lab04-blueprints:latest
 
 - Métricas con Actuator.  
 
-## 📈 Métricas (Actuator)
+## Métricas (Actuator)
 
 - Endpoints expuestos:
   - `/actuator/metrics` — listado de métricas disponibles
