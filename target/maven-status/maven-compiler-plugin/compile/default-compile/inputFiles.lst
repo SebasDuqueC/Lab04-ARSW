@@ -2,6 +2,7 @@ C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\sr
 C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\config\OpenApiConfig.java
 C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\controllers\ApiResponseDto.java
 C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\controllers\BlueprintsAPIController.java
+C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\controllers\RootAPIController.java
 C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\filters\BlueprintsFilter.java
 C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\filters\IdentityFilter.java
 C:\Users\isaac\OneDrive\Universidad\ARSW\Laboratorios\Laboratorio4\Lab04-ARSW\src\main\java\edu\eci\arsw\blueprints\filters\RedundancyFilter.java
